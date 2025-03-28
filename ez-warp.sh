@@ -86,6 +86,10 @@ PostUp = ip -6 route add default dev warp table 100\\
 PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
 PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
 mv "$CONFIG_FILE" /etc/wireguard/warp.conf
+sed -i '/nameserver 2a00\:1098\:2b\:\:1/d' /etc/resolv.conf
+sed -i '/nameserver 8\.8/d' /etc/resolv.conf
+sed -i '/nameserver 9\.9/d' /etc/resolv.conf
+sed -i '/nameserver 1\.1\.1\.1/d' /etc/resolv.conf
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
