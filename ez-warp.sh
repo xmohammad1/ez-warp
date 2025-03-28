@@ -74,31 +74,15 @@ fi
 
 wgcf generate
 
-
-
-#creating config in the wireguard directory
-
-# this algorithm is  deprecated
-
-# PRIVATE_KEY=$(grep -oP 'PrivateKey\s*=\s*\K.*' wgcf-profile.conf)
-# cat << EOF > "/etc/wireguard/warp.conf"
-# [Interface]
-# PrivateKey = $PRIVATE_KEY
-# Address = 172.16.0.2/32
-# Address = 2606:4700:110:8a1a:85ef:da37:b891:8d01/128
-# DNS = 1.1.1.1
-# MTU = 1280
-# Table = off
-# [Peer]
-# PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
-# AllowedIPs = 0.0.0.0/0
-# AllowedIPs = ::/0
-# Endpoint = engage.cloudflareclient.com:2408
-# EOF
-
-# the better algorithm
-
-sed -i '/\[Peer\]/i Table = off' wgcf-profile.conf
+CONFIG_FILE="wgcf-profile.conf"
+sed -i '/\[Peer\]/i Table = off' "$CONFIG_FILE"
+# Extract the IPv6 address from the config
+ipv6_rout=$(awk -F '[ ,]+' '/Address/ {split($4, a, "/"); print a[1]}' "$CONFIG_FILE")
+sed -i "6a \\
+PostUp = ip -6 rule add from $ipv6_rout lookup 100\\
+PostUp = ip -6 route add default dev warp table 100\\
+PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
+PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
 mv wgcf-profile.conf /etc/wireguard/warp.conf
 
 systemctl disable --now wg-quick@warp &> /dev/null || true
