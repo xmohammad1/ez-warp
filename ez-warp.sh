@@ -86,7 +86,6 @@ PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
 mv "$CONFIG_FILE" /etc/wireguard/warp.conf
 
 systemctl disable --now wg-quick@warp &> /dev/null || true
-sudo wg-quick up warp
 systemctl enable --now wg-quick@warp
 
 echo "Wireguard warp is up and running"
