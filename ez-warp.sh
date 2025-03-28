@@ -25,6 +25,42 @@ if [ "$(id -u)" -ne 0 ]; then
     echo "This script requires root privileges. Please run it as root."
     exit 1
 fi
+# Check if Warp is already installed by testing for the existence of the config file
+if [ -f /etc/wireguard/warp.conf ]; then
+    echo "Warp is already installed."
+    echo "Please select an option:"
+    echo "1) Fully Uninstall Warp, Wireguard and related packages"
+    echo "2) Reinstall Warp"
+    read -rp "Enter your choice (1 or 2): " choice
+    case $choice in
+      1)
+        echo "Fully uninstalling Warp and associated packages..."
+        # Stop and disable the Warp interface
+        systemctl disable --now wg-quick@warp &> /dev/null || true
+        # Remove configuration files and binaries
+        rm -rf /etc/wireguard
+        rm -rf wgcf-account.toml
+        rm -f /usr/bin/wgcf
+
+        # Fully remove Wireguard and related packages.
+        # Note: Depending on your system, the package names might differ.
+        ubuntu_major_version=$(grep DISTRIB_RELEASE /etc/lsb-release | cut -d'=' -f2 | cut -d'.' -f1)
+        if [[ "$ubuntu_major_version" == "24" ]]; then
+          apt-get purge -y wireguard openresolv net-tools iproute2 dnsutils
+        else
+          apt-get purge -y wireguard-tools openresolv net-tools iproute2 dnsutils
+        fi
+        apt-get autoremove -y
+
+        echo "Uninstallation complete."
+        exit 0
+        ;;
+      *)
+        echo "Invalid option. Exiting."
+        exit 1
+        ;;
+    esac
+fi
 #installing necessary packages
 apt --fix-broken install -y
 apt update && apt upgrade -y
@@ -76,7 +112,7 @@ chmod +x /usr/bin/wgcf
 rm -rf wgcf-account.toml &> /dev/null || true
 rm -rf /etc/wireguard/warp.conf &> /dev/null || true
 # main dish
-
+clear
 yes | wgcf register
 read -rp "Do you want to use your own key? (Y/n): " response
 if [[ $response =~ ^[Yy]$ ]]; then
