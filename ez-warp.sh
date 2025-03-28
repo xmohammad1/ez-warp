@@ -75,6 +75,8 @@ fi
 wgcf generate
 
 CONFIG_FILE="./wgcf-profile.conf"
+sed -i 's/^DNS = 1\.1\.1\.1/DNS = 8\.8\.8\.8,8\.8\.4\.4,1\.1\.1\.1,9\.9\.9\.10/g' ${CONFIG_FILE}
+sed -i 's/^DNS = 2620:fe\:\:10,2001\:4860\:4860\:\:8888,2606\:4700\:4700\:\:1111/DNS = 8\.8\.8\.8,1\.1\.1\.1,9\.9\.9\.10/g' ${CONFIG_FILE}
 sed -i '/\[Peer\]/i Table = off' "$CONFIG_FILE"
 # Extract the IPv6 address from the config
 ipv6_rout=$(awk -F '[ ,]+' '/Address/ {split($4, a, "/"); print a[1]}' "$CONFIG_FILE")
@@ -84,7 +86,10 @@ PostUp = ip -6 route add default dev warp table 100\\
 PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
 PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
 mv "$CONFIG_FILE" /etc/wireguard/warp.conf
-
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+echo "nameserver 9.9.9.10" >> /etc/resolv.conf
 systemctl disable --now wg-quick@warp &> /dev/null || true
 systemctl enable --now wg-quick@warp
 
