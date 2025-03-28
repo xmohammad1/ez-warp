@@ -183,6 +183,7 @@ PostUp = ip -6 rule add from $ipv6_rout lookup 100\\
 PostUp = ip -6 route add default dev warp table 100\\
 PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
 PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
+sudo sed -i '/\[Peer\]/a PersistentKeepalive = 25' /etc/wireguard/warp.conf
 
 # Final setup
 mv "$CONFIG_FILE" /etc/wireguard/warp.conf
@@ -190,10 +191,8 @@ mv "$CONFIG_FILE" /etc/wireguard/warp.conf
 show_progress "Configuring DNS resolvers..."
 sed -i '/nameserver 2a00\:1098\:2b\:\:1/d; /nameserver 8\.8/d; /nameserver 9\.9/d; /nameserver 1\.1\.1\.1/d' /etc/resolv.conf
 {
-    echo "nameserver 8.8.8.8"
-    echo "nameserver 8.8.4.4" 
     echo "nameserver 1.1.1.1"
-    echo "nameserver 9.9.9.10"
+    echo "nameserver 8.8.8.8"
 } >> /etc/resolv.conf
 echo "precedence ::ffff:0:0/96  100" >> /etc/gai.conf
 show_progress "Starting WARP service..."
