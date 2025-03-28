@@ -30,7 +30,7 @@ if [ -f /etc/wireguard/warp.conf ]; then
     echo "Warp is already installed."
     echo "Please select an option:"
     echo "1) Fully Uninstall Warp, Wireguard and related packages"
-    echo "2) Reinstall Warp"
+    echo "2) Exit"
     read -rp "Enter your choice (1 or 2): " choice
     case $choice in
       1)
@@ -54,6 +54,10 @@ if [ -f /etc/wireguard/warp.conf ]; then
 
         echo "Uninstallation complete."
         exit 0
+        ;;
+      2)
+        echo "Exiting..."
+        exit 1
         ;;
       *)
         echo "Invalid option. Exiting."
