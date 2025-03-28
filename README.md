@@ -31,7 +31,7 @@ if you are using xray you should add this configuration to your 'outband':
       "tag": "warp",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "ForceIPv6v4"
+        "domainStrategy": "ForceIPv4v6"
       },
       "streamSettings": {
         "sockopt": {
@@ -44,10 +44,17 @@ if you are using xray you should add this configuration to your 'outband':
 Add this to routing in rules section
 ```json
       {
-          "domain": [
-              "geosite:openai"
-          ],
-          "outboundTag": "warp"
+        "domain": [
+          "geosite:spotify",
+          "geosite:discord",
+          "geosite:google-gemini",
+          "geosite:reddit",
+          "domain:ipinfo.io",
+          "domain:web.dev",
+          "domain:giglio.com",
+          "domain:adbtc.top"
+        ],
+        "outboundTag": "warp"
       }
 ```
 | domainStrategy | [test-ipv6.com](https://test-ipv6.com/) | [bgp.he.net](https://bgp.he.net/) | [chat.openai.com](https://chat.openai.com/cdn-cgi/trace) |
