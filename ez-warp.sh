@@ -26,16 +26,18 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 #installing necessary packages
-
+apt --fix-broken install -y
 apt update && apt upgrade
+apt install -y openresolv
+apt install -y net-tools iproute2 dnsutils
 ubuntu_major_version=$(grep DISTRIB_RELEASE /etc/lsb-release | cut -d'=' -f2 | cut -d'.' -f1)
 if [[ "$ubuntu_major_version" == "24" ]]; then
   sudo apt install -y wireguard
 else
-  sudo apt install -y wireguard-dkms wireguard-tools resolvconf
+  apt install -y wireguard-tools
 fi
-
-
+systemctl enable systemd-resolved.service
+systemctl start systemd-resolved.service
 
 #checking packages
 if ! command -v wg-quick &> /dev/null
