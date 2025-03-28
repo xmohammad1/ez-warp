@@ -27,24 +27,11 @@ script asks for your custom license key , you can use it to enable WARP+.
 ## Tip
 if you are using xray you should add this configuration to your 'outband': 
 ```json
-{
-  "tag": "warp",
-  "protocol": "freedom",
-  "streamSettings": {
-    "sockopt": {
-      "tcpFastOpen": true,
-      "interface": "warp"
-    }
-  }
-}
-```
-Add this to routing in rules section
-```json
     {
       "tag": "warp",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "ForceIPv6"
+        "domainStrategy": "ForceIPv6v4"
       },
       "streamSettings": {
         "sockopt": {
@@ -53,6 +40,15 @@ Add this to routing in rules section
         }
       }
     }
+```
+Add this to routing in rules section
+```json
+      {
+          "domain": [
+              "geosite:openai"
+          ],
+          "outboundTag": "warp"
+      }
 ```
 | domainStrategy | [test-ipv6.com](https://test-ipv6.com/) | [bgp.he.net](https://bgp.he.net/) | [chat.openai.com](https://chat.openai.com/cdn-cgi/trace) |
 | :--- | :---: | :---: | :---: |
