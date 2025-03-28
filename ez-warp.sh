@@ -27,7 +27,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 #installing necessary packages
 apt --fix-broken install -y
-apt update && apt upgrade
+apt update && apt upgrade -y
 apt install -y openresolv
 apt install -y net-tools iproute2 dnsutils
 ubuntu_major_version=$(grep DISTRIB_RELEASE /etc/lsb-release | cut -d'=' -f2 | cut -d'.' -f1)
@@ -77,7 +77,7 @@ rm -rf wgcf-account.toml &> /dev/null || true
 rm -rf /etc/wireguard/warp.conf &> /dev/null || true
 # main dish
 
-wgcf register
+yes | wgcf register
 read -rp "Do you want to use your own key? (Y/n): " response
 if [[ $response =~ ^[Yy]$ ]]; then
     read -rp "ENTER YOUR LICENSE: " LICENSE_KEY
