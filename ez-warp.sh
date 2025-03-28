@@ -183,7 +183,8 @@ PostUp = ip -6 rule add from $ipv6_rout lookup 100\\
 PostUp = ip -6 route add default dev warp table 100\\
 PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
 PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
-sudo sed -i '/\[Peer\]/a PersistentKeepalive = 25' /etc/wireguard/warp.conf
+sed -i 's/engage\.cloudflareclient\.com/162\.159\.192\.1/g' "$CONFIG_FILE"
+sudo sed -i '/\[Peer\]/a PersistentKeepalive = 25' "$CONFIG_FILE"
 
 # Final setup
 mv "$CONFIG_FILE" /etc/wireguard/warp.conf
