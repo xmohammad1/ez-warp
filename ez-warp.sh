@@ -52,12 +52,23 @@ then
 fi
 
 clear
-#downloading assets
+# downloading assets dynamically using the GitHub API
 arch=$(architecture)
-wget -O "/usr/bin/wgcf" https://github.com/ViRb3/wgcf/releases/download/v2.2.23/wgcf_2.2.23_linux_$arch
+echo "Detected architecture: $arch"
+
+# Fetch the latest release JSON from GitHub
+release_json=$(curl -s https://api.github.com/repos/ViRb3/wgcf/releases/latest)
+
+download_url=$(echo "$release_json" | grep "browser_download_url" | grep "wgcf_.*_linux_${arch}" | head -n 1 | cut -d '"' -f4)
+
+if [ -z "$download_url" ]; then
+    echo "Could not find download URL for architecture $arch"
+    exit 1
+fi
+
+echo "Downloading wgcf from $download_url"
+wget -O /usr/bin/wgcf "$download_url"
 chmod +x /usr/bin/wgcf
-
-
 
 clear
 # removing files that might cause problems
