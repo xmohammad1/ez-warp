@@ -38,7 +38,29 @@ if you are using xray you should add this configuration to your 'outband':
   }
 }
 ```
-then set the routing properly as instructed by [XRAY documentation](https://xtls.github.io/en/config/routing.html)
+Add this to routing in rules section
+```json
+    {
+      "tag": "warp",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "ForceIPv6"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tcpFastOpen": true,
+          "interface": "warp"
+        }
+      }
+    }
+```
+| domainStrategy | [test-ipv6.com](https://test-ipv6.com/) | [bgp.he.net](https://bgp.he.net/) | [chat.openai.com](https://chat.openai.com/cdn-cgi/trace) |
+| :--- | :---: | :---: | :---: |
+| ForceIPv6v4 | IPv6v4 Address | IPv6 Address | IPv6 Address |
+| ForceIPv6 | Website Not Accessible | IPv6 Address | IPv6 Address |
+| ForceIPv4v6 | IPv6v4 Address **2** | IPv4 Address | IPv4 Address |
+| ForceIPv4 | IPv4 Address | IPv4 Address | IPv4 Address |
+| ForceIP | IPv6v4 Address **3** | IPv6 Address | IPv6 Address |
 
 ## DONATION
 if you want to appreciate me donate 5$ to a person in need
