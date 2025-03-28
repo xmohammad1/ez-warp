@@ -195,7 +195,7 @@ sed -i '/nameserver 2a00\:1098\:2b\:\:1/d; /nameserver 8\.8/d; /nameserver 9\.9/
     echo "nameserver 1.1.1.1"
     echo "nameserver 9.9.9.10"
 } >> /etc/resolv.conf
-
+echo "precedence ::ffff:0:0/96  100" >> /etc/gai.conf
 show_progress "Starting WARP service..."
 systemctl disable --now wg-quick@warp &> /dev/null || true
 systemctl enable --now wg-quick@warp
