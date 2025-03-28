@@ -51,7 +51,7 @@ then
     exit 1
 fi
 
-clear
+
 # downloading assets dynamically using the GitHub API
 arch=$(architecture)
 echo "Detected architecture: $arch"
@@ -70,7 +70,7 @@ echo "Downloading wgcf from $download_url"
 wget -O /usr/bin/wgcf "$download_url"
 chmod +x /usr/bin/wgcf
 
-clear
+
 # removing files that might cause problems
 
 rm -rf wgcf-account.toml &> /dev/null || true
