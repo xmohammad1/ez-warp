@@ -74,7 +74,7 @@ fi
 
 wgcf generate
 
-CONFIG_FILE="wgcf-profile.conf"
+CONFIG_FILE="./wgcf-profile.conf"
 sed -i '/\[Peer\]/i Table = off' "$CONFIG_FILE"
 # Extract the IPv6 address from the config
 ipv6_rout=$(awk -F '[ ,]+' '/Address/ {split($4, a, "/"); print a[1]}' "$CONFIG_FILE")
@@ -83,9 +83,10 @@ PostUp = ip -6 rule add from $ipv6_rout lookup 100\\
 PostUp = ip -6 route add default dev warp table 100\\
 PreDown = ip -6 rule del from $ipv6_rout lookup 100\\
 PreDown = ip -6 route del default dev warp table 100" "$CONFIG_FILE"
-mv wgcf-profile.conf /etc/wireguard/warp.conf
+mv "$CONFIG_FILE" /etc/wireguard/warp.conf
 
 systemctl disable --now wg-quick@warp &> /dev/null || true
+sudo wg-quick up warp
 systemctl enable --now wg-quick@warp
 
 echo "Wireguard warp is up and running"
